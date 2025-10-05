@@ -79,12 +79,12 @@ stdenv.mkDerivation rec {
     makeWrapper ${dotnet-runtime_8}/bin/dotnet $out/bin/vintagestory \
       --prefix LD_LIBRARY_PATH : "${runtimeLibs}" \
       --set-default mesa_glthread true \
-      --add-flags $out/vintagestory/Vintagestory.dll
+      --add-flags $out/share/vintagestory/Vintagestory.dll
 
     makeWrapper ${dotnet-runtime_8}/bin/dotnet $out/bin/vintagestory-server \
       --prefix LD_LIBRARY_PATH : "${runtimeLibs}" \
       --set-default mesa_glthread true \
-      --add-flags $out/vintagestory/VintagestoryServer.dll
+      --add-flags $out/share/vintagestory/VintagestoryServer.dll
 
     find "$out/share/vintagestory/assets/" -not -path "*/fonts/*" -regex ".*/.*[A-Z].*" | while read -r file; do
       local filename="$(basename -- "$file")"
