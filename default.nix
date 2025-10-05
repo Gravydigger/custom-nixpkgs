@@ -4,5 +4,5 @@ let
     overlays = [];
   };
 in {
-  vs = pkgs.callPackage ./vintage_story.nix {};
+  vs = pkgs.callPackage ./vintagestory.nix {};
 }

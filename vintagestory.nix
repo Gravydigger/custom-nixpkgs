@@ -67,28 +67,32 @@ stdenv.mkDerivation rec {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/vintagestory
-    cp -r * $out/vintagestory
+    mkdir -p $out/share/vintagestory $out/bin $out/share/pixmaps $out/share/fonts/truetype
+    cp -r * $out/share/vintagestory
+    cp $out/share/vintagestory/assets/gameicon.xpm $out/share/pixmaps/vintagestory.xpm
+    cp $out/share/vintagestory/assets/game/fonts/*.ttf $out/share/fonts/truetype
 
     runHook postInstall
   '';
 
   preFixup = ''
-    makeWrapper ${dotnet-runtime_8}/bin/dotnet $out/vintagestory/Vintagestory \
+    makeWrapper ${dotnet-runtime_8}/bin/dotnet $out/bin/vintagestory \
       --prefix LD_LIBRARY_PATH : "${runtimeLibs}" \
-      --prefix FONTCONFIG_FILE : "$out/font.conf" \
       --set-default mesa_glthread true \
       --add-flags $out/vintagestory/Vintagestory.dll
 
-    makeWrapper ${dotnet-runtime_8}/bin/dotnet $out/vintagestory/VintagestoryServer \
+    makeWrapper ${dotnet-runtime_8}/bin/dotnet $out/bin/vintagestory-server \
       --prefix LD_LIBRARY_PATH : "${runtimeLibs}" \
       --set-default mesa_glthread true \
       --add-flags $out/vintagestory/VintagestoryServer.dll
 
-    find "$out/vintagestory/assets/" -not -path "*/fonts/*" -regex ".*/.*[A-Z].*" | while read -r file; do
+    find "$out/share/vintagestory/assets/" -not -path "*/fonts/*" -regex ".*/.*[A-Z].*" | while read -r file; do
       local filename="$(basename -- "$file")"
       ln -sf "$filename" "''${file%/*}"/"''${filename,,}"
     done
+
+    ln -sf $out/bin/vintagestory $out/share/vintagestory/Vintagestory
+    ln -sf $out/bin/vintagestory-server $out/share/vintagestory/VintagestoryServer
   '';
 
   meta = {
