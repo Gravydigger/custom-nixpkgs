@@ -18,7 +18,6 @@
   libpulseaudio,
   dotnet-runtime_8,
 }:
-
 stdenv.mkDerivation rec {
   pname = "vintagestory";
   version = "1.21.2";
@@ -53,6 +52,17 @@ stdenv.mkDerivation rec {
       libXcursor
     ])
   );
+
+  desktopItems = [
+    (makeDesktopItem {
+      name = "vintagestory";
+      desktopName = "Vintage Story";
+      exec = "vintagestory";
+      icon = "vintagestory";
+      comment = "Innovate and explore in a sandbox world";
+      categories = ["Game"];
+    })
+  ];
 
   installPhase = ''
     runHook preInstall
